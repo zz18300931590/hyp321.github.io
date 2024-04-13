@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>WebGIS应用</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.20/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.20/"></script>
+  <style>
+    #header {
+      height: 50px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      line-height: 50px;
+    }
+    #mapView {
+      height: 80vh;
+    }
+    #basemapGallery {
+      position: relative; /* 修改为relative */
+      top: 20px; /* 调整top值 */
+      z-index: 50;
+    }
+    #legend {
+      position: relative; /* 修改为relative */
+      top: 20px; /* 调整top值 */
+      z-index: 50;
+    }
+    #searchWidget {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 50;
+    }
+    #layerList {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body>
+  <div id="header">北京地摊点位置</div>
+  <div id="mapView"></div>
+  <div id="basemapGallery"></div>
+  <div id="legend"></div>
+  <div id="searchWidget"></div>
+  <div id="layerList"></div>
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/widgets/BasemapGallery",
+      "esri/widgets/Legend",
+      "esri/widgets/Search",
+      "esri/widgets/LayerList",
+      "esri/layers/FeatureLayer",
+      "dojo/domReady!"
+    ], function(Map, MapView, BasemapGallery, Legend, Search, LayerList, FeatureLayer) {
+      var map = new Map({
+        basemap: "streets"
+      });
+      var view = new MapView({
+        container: "mapView",
+        map: map,
+        center: [119, 35],
+        zoom: 6
+      });
+      
+      var featureLayer = new FeatureLayer({
+        url: "https://www.geosceneonline.cn/server/rest/services/Hosted/HYP/FeatureServer",
+        outFields: ["*"]
+      });
+      
+      map.add(featureLayer);
+      
+      var basemapGallery = new BasemapGallery({
+        view: view,
+        container: "basemapGallery"
+      });
+      var legend = new Legend({
+        view: view,
+        container: "legend"
+      });
+      var searchWidget = new Search({
+        view: view,
+        container: "searchWidget"
+      });
+      var layerList = new LayerList({
+        view: view,
+        container: "layerList"
+      });
+      require([
+  "esri/widgets/ScaleBar",
+  "dojo/domReady!"
+], function(ScaleBar) {
+  var scaleBar = new ScaleBar({
+    view: view,
+    unit: "metric"
+  });
+  view.ui.add(scaleBar, "bottom-left");
+});
+
+    });
+  </script>
+</body>
+</html>
